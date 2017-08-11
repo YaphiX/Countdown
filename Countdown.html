@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Countdown</title>
+	<meta charset="utf-8">
+</head>
+<body>
+	<div class="Countdown">
+		<span id="hour"></span>时
+		<span id="mini"></span>分
+		<span id="sec"></span>秒
+	</div>
+</body>
+<script type="text/javascript">
+	var fnCountdown = function(d, obj) {
+		// console.log(obj.sec)
+		var f = {
+			zero: function(n) {
+				var n = parseInt(n,10)
+				if( n > 0) {
+					if( n <= 9 ) {
+						n = '0' + n
+					}
+					return String(n)
+				} else {
+					return '00'
+				}
+			},
+			dv: function() {
+				d = d || Date.UTC(2050,0,1)
+				var future = new Date(d)
+				var now = new Date()
+				var dur = Math.round((future.getTime() - now.getTime())/1000) + future.getTimezoneOffset() * 60
+				var pms = {
+					sec: "00",
+					mini: "00",
+					hour: "00",
+					day: "00",
+					month: "00",
+					year: "0"
+				}
+				if( dur > 0 ) {
+					pms.sec = dur % 60
+					pms.mini = Math.floor(( dur / 60 )) > 0 ? f.zero(Math.floor(( dur / 60 )) % 60) : "00"
+					pms.hour = Math.floor(( dur / 3600 )) > 0 ? f.zero(Math.floor(( dur / 3600 )) % 24) : "00"
+					pms.day = Math.floor(( dur / 86400 )) > 0 ? f.zero(Math.floor(( dur / 86400 )) % 30) : "00"
+					//此处2629744为平均每月的秒数
+					pms.month = Math.floor(( dur / 2629744 )) > 0 ? f.zero(Math.floor((dur / 2629744)) % 12) : "00"
+					//年份，按按回归年365天5时48分46秒算
+					pms.year = Math.floor((dur / 31556926)) > 0 ? f.zero(Math.floor(( dur / 31556926))) : "0"
+				}
+				return pms;
+			},
+			ui: function() {
+				if(obj.sec) {
+					obj.sec.innerHTML = f.dv().sec					
+				}
+				if(obj.mini) {
+					obj.mini.innerHTML = f.dv().mini
+				}
+				if(obj.hour) {
+					obj.hour.innerHTML = f.dv().hour
+				}
+				if(obj.day) {
+					obj.hour.innerHTML = f.dv().day
+				}
+				if(obj.month) {
+					obj.month.innerHTML = f.dv().month
+				}
+				if(obj.year) {
+					obj.year.innerHTML = f.dv().year
+				}
+				setTimeout(f.ui,1000)
+			}
+		}
+		f.ui();
+	}
+</script>
+<script type="text/javascript">
+	var d = Date.UTC(2020,1,1,20,0);
+	var obj = {
+		sec: document.getElementById('sec'),
+		mini: document.getElementById('mini'),
+		hour: document.getElementById('hour')
+	}
+	fnCountdown(d, obj)
+</script>
+</html>
